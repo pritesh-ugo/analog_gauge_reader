@@ -106,3 +106,4 @@ Additionally if the `debug` flag is set then the plots of all pipeline stages wi
 I prepared two scripts to automatically run the pipeline and evaluations on multiple folders with one command. This allows us to easily conduct experiments for images that we group by their characteristics in different folders.
 
 If they want to be used, make sure to modify the paths inside the scripts, to match with your data.
+# Analog-meter_Pipeline
