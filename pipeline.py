@@ -164,7 +164,7 @@ def process_image(image, detection_model_path, key_point_model_path,
 
     logging.info("Finish Gauge Detection")
 
-    # ------------------Key Point Detection-------------------------
+   # ------------------Key Point Detection-------------------------
 
     if debug:
         print("-------------------")
@@ -172,9 +172,34 @@ def process_image(image, detection_model_path, key_point_model_path,
 
     logging.info("Start key point detection")
 
+    # =================================================================
+    # NEW PRE-PROCESSING: Thicken gauge tick marks for better detection
+    # 1. Convert a copy of the image to grayscale
+    gray_img = cv2.cvtColor(cropped_resized_img, cv2.COLOR_RGB2GRAY)
+    
+    # 2. Create a 3x3 pixel kernel
+    kernel = np.ones((3,3), np.uint8)
+    
+    # 3. Erode the image (This expands dark pixels on light backgrounds)
+    eroded_img = cv2.erode(gray_img, kernel, iterations=1)
+    
+    # NEW: Save the eroded image to the results folder so you can look at it
+    if debug:
+        cv2.imwrite(os.path.join(run_path, "eroded_debug.png"), eroded_img)
+    # 4. Convert back to 3-channel RGB so the neural network tensor doesn't crash
+    keypoint_input_img = cv2.cvtColor(eroded_img, cv2.COLOR_GRAY2RGB)
+    # =================================================================
+
     key_point_inferencer = KeyPointInference(key_point_model_path)
-    heatmaps = key_point_inferencer.predict_heatmaps(cropped_resized_img)
+    
+    # 5. FEED THE PRE-PROCESSED IMAGE TO THE MODEL HERE:
+    heatmaps = key_point_inferencer.predict_heatmaps(keypoint_input_img)
+    
     key_point_list = detect_key_points(heatmaps)
+
+    # key_point_inferencer = KeyPointInference(key_point_model_path)
+    # heatmaps = key_point_inferencer.predict_heatmaps(cropped_resized_img)
+    # key_point_list = detect_key_points(heatmaps)
 
     key_points = key_point_list[1]
     start_point = key_point_list[0]

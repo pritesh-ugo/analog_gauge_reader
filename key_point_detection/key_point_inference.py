@@ -24,6 +24,6 @@ class KeyPointInference:
 
 
 def detect_key_points(heatmaps):
-    key_point_list = full_key_point_extraction(heatmaps, 0.6)
+    key_point_list = full_key_point_extraction(heatmaps, 0.25)
 
     return key_point_list

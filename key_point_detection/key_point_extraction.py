@@ -7,7 +7,7 @@ PCK_KEY = "Percentage of true where at least one predicted is close"
 NON_ASSIGNED_KEY = "Percentage non assigned predicted points"
 
 
-def full_key_point_extraction(heatmaps, threshold=0.5, bandwidth=20):
+def full_key_point_extraction(heatmaps, threshold=0.25, bandwidth=20):
     key_point_list = []
     for i in range(heatmaps.shape[0]):
         # middle

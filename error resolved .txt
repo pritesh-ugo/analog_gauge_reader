@@ -1,0 +1,2 @@
+TARGET=$(find $CONDA_PREFIX -name "libnvrtc*.so*" | grep -v "/libnvrtc.so$" | head -n 1)
+ln -sf $TARGET $CONDA_PREFIX/lib/libnvrtc.so

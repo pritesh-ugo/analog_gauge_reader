@@ -7,6 +7,16 @@ class OCRReading:
     def __init__(self, polygon, reading, confidence):
         self.polygon = polygon
         self.reading = reading.strip()
+
+        # Fix OCR misreading of decimals: "005" → "0.05", "01" → "0.1", "015" → "0.15"
+        # Gauges with small ranges often have labels like 0.05, 0.1, 0.15 that the
+        # OCR reads without the decimal dot because it is too thin to detect.
+        if (len(self.reading) > 1
+                and self.reading[0] == '0'
+                and '.' not in self.reading
+                and self.reading.lstrip('-').isdigit()):
+            self.reading = self.reading[0] + '.' + self.reading[1:]
+
         self.confidence = confidence
 
         if self.is_number():
